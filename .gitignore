@@ -1,0 +1,14 @@
+### PyCharm template
+.idea/
+
+
+### VirtualEnv template
+venv/
+
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+
+# limpar o cache do .gitignore
+# git rm -f -r --cached .idea/
