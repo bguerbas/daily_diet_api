@@ -1,22 +1,27 @@
 from flask import Flask
-from flask_restful import Api
-
 from database import db
-from config import Config
-from resources.diet import DietResource
-from resources.user import UserResource
+from routes.meal import meal_routes
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object('config.Config')
 
 db.init_app(app)
+app.register_blueprint(meal_routes)
 
-api = Api(app)
+initialized = False
 
-api.add_resource(DietResource, '/meal', '/meal/<int:id>')
-api.add_resource(UserResource, '/user/<string:action>')
+
+@app.before_request
+def initialize_once():
+    global initialized
+    if not initialized:
+        print('Creating database...')
+        with app.app_context():
+            db.create_all()
+            initialized = True
+
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+    initialize_once()
     app.run(debug=True)
+
